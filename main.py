@@ -20,3 +20,18 @@ def find_tag(dom, tag_name):
                 except IndexError:
                     pass
         tag_till_now += '.'
+
+
+def get_parent_with_tag_or_variable(dom, node, tag):
+    while node:
+        if node.tagName == tag:
+            return node
+        if node.tagName == 'match:variable':
+            var_name = node.getAttribute('name')
+            variables = utils.find_tag(dom, 'name')
+            for variable in variables:
+                if variable.firstChild.data == var_name:
+                    tags = get_parent_with_tag_or_variable(dom, variable, tag)
+                    if tags:
+                        return tags
+        node = node.parentNode
